@@ -16,7 +16,11 @@ Basicall
 - [ ] Meme Search functionality
   - [x] Add Search component on the navBar c/p header from shadcn
   - [x] Create server action to send search query as parameter,
-  - [ ] Route for search on the backend and display the results
+  - [x] Add search page to show results /search as cards 
+    - [x] Add imagekit nodejs library https://www.npmjs.com/package/imagekit + types
+    - [x] Move imagekit provider to a separate component + add it to the main layout
+    - [x] Create a image result component -> map all the images fetched on the searchResult page. 
+    - [x] add cards to each image on the search component
 - [ ] Add tags to imgs to search by theme
 - [ ] Node SDK
 - [ ] Meme Cards
