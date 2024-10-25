@@ -2,6 +2,7 @@
 // import Image from "next/image";
 import { IKImage, IKUpload, ImageKitProvider } from "imagekitio-next";
 import { useState } from "react";
+import { Button } from "~/components/ui/button";
 
 const publicKey = process.env.NEXT_PUBLIC_PUBLIC_KEY;
 const urlEndpoint = process.env.NEXT_PUBLIC_URL_ENDPOINT;
@@ -32,7 +33,12 @@ const authenticator = async () => {
 export default function Home() {
   const [filePath, setFilePath] = useState("")
   return (
-    <div className="">
+    <div className="m-5">
+      <Button
+        variant={"destructive"}
+      >
+        Click Me
+        </Button>
       <ImageKitProvider
         publicKey={publicKey}
         urlEndpoint={urlEndpoint}
