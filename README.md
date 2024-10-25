@@ -21,6 +21,12 @@ Basicall
     - [x] Move imagekit provider to a separate component + add it to the main layout
     - [x] Create a image result component -> map all the images fetched on the searchResult page. 
     - [x] add cards to each image on the search component
+  - [ ] Fix dark-mode theme on [shadcn theme](https://ui.shadcn.com/docs/dark-mode/next) -> pnpm add next-themes 
+    - [x] Note: I have to add a **suppressHydrationWarning** on the main layout to helps handle hydration mismatches between server and client rendering
+    - [x] Create a toogle-theme component + add it to the header
+  - [x] fix responsiveness of the cards -> add px-4 to /search page + break grid-cols on sm and md
+  - [x] fix search input to contain the value of the search param -> transform the input part of the search component into a client one -> I used a hook useSearchParams "next/navigation".
+- [ ] Add custom metadata as name for imagekit assets (displayName)
 - [ ] Add tags to imgs to search by theme
 - [ ] Node SDK
 - [ ] Meme Cards

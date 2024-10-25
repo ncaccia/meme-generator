@@ -5,8 +5,9 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
-import { Input } from "~/components/ui/input";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
+import ModeToggle from "~/components/ui/toggle-theme";
+import SearchInput from "./search/search-input";
 
 export default function Header() {
     return (
@@ -37,7 +38,7 @@ export default function Header() {
                         <span className="sr-only">Toggle navigation menu</span>
                     </Button>
                 </SheetTrigger>
-                <SheetContent side="left" className="bg-gray-950">
+                <SheetContent side="left" >
                     <nav className="grid gap-6 text-lg font-medium">
                         <Link
                             href="#"
@@ -56,7 +57,7 @@ export default function Header() {
                 </SheetContent>
             </Sheet>
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
-                
+
                 {/* Search From component in the header */}
 
                 <form
@@ -69,14 +70,13 @@ export default function Header() {
                 >
                     <div className="relative">
                         <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                        <Input
-                            name="search"
-                            type="search"
-                            placeholder="Search memes..."
-                            className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
-                        />
+                        <SearchInput />
                     </div>
                 </form>
+
+                {/* Add the dark/light mode toggle button */}
+
+                <ModeToggle />
 
                 {/* Avatar dropdown menu component */}
 
@@ -96,7 +96,7 @@ export default function Header() {
                         <DropdownMenuItem>Logout</DropdownMenuItem>
                     </DropdownMenuContent>
                 </DropdownMenu>
-            
+
             </div>
         </header>
     )
