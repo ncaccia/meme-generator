@@ -13,6 +13,7 @@ export default function ResultList({ files }: { files: FileObject[] }) {
                 <MemeCard
                     key={file.fileId}
                     file={{
+                        fileId: file.fileId,
                         filePath: file.filePath,
                         name: file.customMetadata?.displayName as string ?? file.name,
                         tags: file.tags,

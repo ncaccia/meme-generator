@@ -1,6 +1,8 @@
 // src/app/search/meme-card.tsx
 
+import Link from 'next/link';
 import React from 'react';
+import { Button } from '~/components/ui/button';
 import {
     Card,
     CardHeader,
@@ -12,6 +14,7 @@ import {
 
 // Define the structure for meme file data
 interface MemeFile {
+    fileId: string;
     filePath: string;
     name: string;
     tags?: string[] | null;
@@ -38,7 +41,9 @@ export default function MemeCard({
                 {children}
             </CardContent>
             <CardFooter>
-                <p>Card Footer</p>
+                <Button asChild>
+                    <Link href={`/customize/${file.fileId}`}>Customize</Link>
+                </Button>
             </CardFooter>
         </Card>
     );
