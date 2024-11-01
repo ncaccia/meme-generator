@@ -17,24 +17,41 @@ import {
 import { Input } from "~/components/ui/input";
 import { Label } from "~/components/ui/label";
 
+const normalizeTag = (tag: string): string => {
+    return tag
+        .trim()                     // Remove leading/trailing spaces
+        .toLowerCase()              // Convert to lowercase
+        .replace(/\s+/g, '-')      // Replace spaces with hyphens
+        .replace(/[^a-z0-9-]/g, '') // Remove special characters
+        .replace(/-+/g, '-')       // Replace multiple hyphens with single hyphen
+        .replace(/^-|-$/g, '');    // Remove leading/trailing hyphens
+}
+
 
 
 export default function UploadMemeButton() {
     const uploadInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
     const [displayName, setDisplayName] = useState("");
+    const [tags, setTags] = useState<string[]>([]);
     const [isUploading, setUploading] = useState(false);
     const [isOpen, setIsOpen] = useState(false);
+    const timeoutRef = useRef<NodeJS.Timeout>();
 
     // Handle file selection click
     const handleSelectFile = () => {
+        // Clear any existing timeout
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
         // Set a timeout to reset the loading state if no file is selected
-        setTimeout(() => {
-            // Check if a file was actually selected
+        timeoutRef.current = setTimeout(() => {
+            // Only reset if no file was selected
             if (!uploadInputRef.current?.files?.length) {
                 setUploading(false);
             }
-        }, 500); // Give enough time for file selection
+        }, 1000);
     };
 
     // Handle dialog state
@@ -60,24 +77,48 @@ export default function UploadMemeButton() {
                 </DialogHeader>
                 <div>
                     <form
-                        className="flex flex-col gap-4"
+                        className="flex flex-col gap-5"
                         onSubmit={(e) => {
                             e.preventDefault()
                             setUploading(true)
                             uploadInputRef.current?.click();
                             handleSelectFile();
                         }}>
-                        <Label className="sr-only" htmlFor="displayName">Display Name</Label>
-                        <Input
-                            id="displayName"
-                            name="displayName"
-                            placeholder="Display Name"
-                            required
-                            value={displayName}
-                            onChange={(e) => setDisplayName(e.target.value)}
-                        />
+                        <div>
+                            <Label className="sr-only" htmlFor="displayName">Display Name</Label>
+                            <Input
+                                id="displayName"
+                                name="displayName"
+                                placeholder="Display Name"
+                                required
+                                value={displayName}
+                                onChange={(e) => setDisplayName(e.target.value)}
+                            />
+                        </div>
+
+                        <div>
+                            <Label className="sr-only" htmlFor="tags">Tags</Label>
+                            <Input
+                                id="tags"
+                                name="tags"
+                                placeholder="Comma delimited list of tags"
+                                required
+                                value={tags.join(", ")}
+                                onChange={(e) => {
+                                    const inputValue = e.target.value;
+                                    // Just split by comma and trim, don't normalize while typing
+                                    const newTags = inputValue.split(",").map(tag => tag.trim());
+                                    setTags(newTags);
+                                }}
+                            />
+                        </div>
+
                         <IKUpload
                             fileName="test-upload.png"
+                            tags={[
+                                normalizeTag(displayName),
+                                ...tags.map(tag => normalizeTag(tag)).filter(tag => tag.length > 0)
+                            ]}
                             customMetadata={{ displayName }}
                             onError={(err) => {
                                 setUploading(false)
@@ -87,6 +128,13 @@ export default function UploadMemeButton() {
                             onSuccess={(res) => {
                                 setUploading(false)
                                 router.push(`/customize/${res.fileId}`)
+                            }}
+                            onUploadStart={() => {
+                                // Clear the timeout when upload starts
+                                if (timeoutRef.current) {
+                                    clearTimeout(timeoutRef.current);
+                                }
+                                setUploading(true);
                             }}
                             style={{ display: 'none' }} // hide the default input and use the custom upload button
                             ref={uploadInputRef}
