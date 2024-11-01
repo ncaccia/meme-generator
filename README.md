@@ -35,6 +35,7 @@ Basicall
   - [x] installa shadcn dialog component -> Dialog has triggers that initiate them, like buttons.
   - [x] Input to add displayName to meme / handle submit and dialog close
 - [x] Imgs tags on the upload process + normalized them
+- [ ] Refactor search by tag
 - [ ] Customize Page
 - [ ] Position Overlays
 - [ ] Components improvement

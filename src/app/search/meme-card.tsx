@@ -1,7 +1,6 @@
-// src/app/search/meme-card.tsx
-
 import Link from 'next/link';
 import React from 'react';
+import { Badge } from '~/components/ui/badge';
 import { Button } from '~/components/ui/button';
 import {
     Card,
@@ -33,9 +32,15 @@ export default function MemeCard({
         <Card>
             <CardHeader>
                 <CardTitle>{file.name}</CardTitle>
-                {file.tags && (
-                    <CardDescription>{file.tags}</CardDescription>
-                )}
+                <div className="flex flex-wrap gap-2">
+                    {file.tags && file.tags.length > 0 &&
+                        file.tags.map((tag, index) => (
+                            <Badge className="capitalize" key={index} variant="secondary">
+                                {tag}
+                            </Badge>
+                        ))
+                    }
+                </div>
             </CardHeader>
             <CardContent>
                 {children}

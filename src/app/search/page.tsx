@@ -17,11 +17,10 @@ export default async function SearchPage({
     unstable_noStore(); // this tells nextjs to not cache this page.
 
     const files = await imagekit.listFiles({
-        searchQuery: `name:${searchParams.q}`,
-    })
+        tags: searchParams.q.toLowerCase()
+    });
 
-    console.log("Files list: ", files);
-
+    // console.log("Files list: ", files);
 
     return (
 
