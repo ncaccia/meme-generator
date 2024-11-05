@@ -38,12 +38,12 @@ Basicall
 - [x] Refactor search by tag + add badge on tags from the meme card component.
 - [x] add /customize/[FileId]/ Page
   - [x] refactor imageKit utility out of the pages.
-  - [x] create a CustomizePanel component --> Warning: Only plain objects can be passed to Client Components from Server Components. 
+- [x] create a CustomizePanel component --> Warning: Only plain objects can be passed to Client Components from Server Components. 
   - Note: in next we mostrly use Server Components to fetch the data and Client Components to render it.
-  - [ ] add slider component --> https://imagekit.io/docs/transformations#position-of-layer
-  - [ ] 
-- [ ] Position Overlays
-- [ ] Components improvement
+- [x] add slider component --> https://imagekit.io/docs/transformations#position-of-layer
+- [x] Fix transformation to receive x/y position input
+- [x] Components improvement - add multiple textOverley
+  - Note: need to understand this better, why I use an onUpdate and pass it to the text-overlay component?
 - [ ] Append Overlay
 - [ ] Text Background
 - [ ] Debounce
