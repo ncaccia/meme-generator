@@ -44,7 +44,7 @@ Basicall
 - [x] Fix transformation to receive x/y position input
 - [x] Components improvement - add multiple textOverley
   - Note: need to understand this better, why I use an onUpdate and pass it to the text-overlay component?
-- [ ] Append Overlay
+- [x] Append and remove text Overlay = useState with numberOfOveralys set
 - [ ] Text Background
 - [ ] Debounce
 - [ ] Image Filters

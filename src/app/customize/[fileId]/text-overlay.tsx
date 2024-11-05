@@ -8,9 +8,11 @@ import { Slider } from "~/components/ui/slider"
 
 
 export default function TextOverlay({
+    index,
     onUpdate,
 }: {
-    onUpdate: (text: string, x: number, y: number) => void
+    index: number;
+    onUpdate: (text: string, x: number, y: number) => void;
 }) {
     const [textOverley, setTextOverley] = useState("");
     const [textOverleyXPosition, setTextOverleyXPosition] = useState(0);
@@ -29,10 +31,10 @@ export default function TextOverlay({
     return (
         <Card className="p-5 space-y-4">
             <div>
-                <Label className="text-sm font-bold" htmlFor="textOverley">Text Overley</Label>
+                <Label className="text-sm font-bold" htmlFor={`textOverley${index}`}>Text Overley {index}</Label>
                 <Input
                     className="pt-2"
-                    id="textOverley" name="textOverley" type="text"
+                    id={`textOverley${index}`} name={`textOverley${index}`} type="text"
                     onChange={(e) => {
                         setTextOverley(e.target.value);
                         onUpdate(e.target.value, xPositionDecimal, yPositionDecimal);
@@ -41,7 +43,7 @@ export default function TextOverlay({
                 />
             </div>
             <div>
-                <Label className="text-sm font-bold" htmlFor="textOverleyXPosition">Text X Position = {textOverleyXPosition}</Label>
+                <Label className="text-sm font-bold" htmlFor={`textOverley${index}XPosition`}>Text {index} X Position = {textOverleyXPosition}</Label>
                 <Slider
                     className="pt-2"
                     id="textOverleyXPosition"
@@ -53,7 +55,7 @@ export default function TextOverlay({
                 />
             </div>
             <div>
-                <Label className="text-sm font-bold" htmlFor="textOverleyYPosition">Text Y Position = {textOverleyYPosition}</Label>
+                <Label className="text-sm font-bold" htmlFor={`textOverley${index}YPosition`}>Text {index} Y Position = {textOverleyYPosition}</Label>
                 <Slider
                     className="pt-2"
                     id="textOverleyYPosition"
