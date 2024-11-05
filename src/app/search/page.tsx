@@ -1,13 +1,7 @@
-import ImageKit from "imagekit";
 import { unstable_noStore } from "next/cache";
 import ResultList from "./result-list";
 import UploadMemeButton from "./upload-meme-button";
-
-const imagekit = new ImageKit({
-    publicKey: process.env.NEXT_PUBLIC_PUBLIC_KEY,
-    privateKey: process.env.PRIVATE_KEY,
-    urlEndpoint: process.env.NEXT_PUBLIC_URL_ENDPOINT,
-});
+import { imagekit } from "~/lib/image-kit";
 
 export default async function SearchPage({
     searchParams,
@@ -20,7 +14,6 @@ export default async function SearchPage({
         tags: searchParams.q.toLowerCase()
     });
 
-    // console.log("Files list: ", files);
 
     return (
 

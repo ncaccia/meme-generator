@@ -35,8 +35,13 @@ Basicall
   - [x] installa shadcn dialog component -> Dialog has triggers that initiate them, like buttons.
   - [x] Input to add displayName to meme / handle submit and dialog close
 - [x] Imgs tags on the upload process + normalized them
-- [ ] Refactor search by tag
-- [ ] Customize Page
+- [x] Refactor search by tag + add badge on tags from the meme card component.
+- [x] add /customize/[FileId]/ Page
+  - [x] refactor imageKit utility out of the pages.
+  - [x] create a CustomizePanel component --> Warning: Only plain objects can be passed to Client Components from Server Components. 
+  - Note: in next we mostrly use Server Components to fetch the data and Client Components to render it.
+  - [ ] add slider component --> https://imagekit.io/docs/transformations#position-of-layer
+  - [ ] 
 - [ ] Position Overlays
 - [ ] Components improvement
 - [ ] Append Overlay
@@ -52,3 +57,8 @@ Basicall
 - [ ] Authorization Checks
 - [ ] Favouriete Counts
 - [ ] Clean up
+
+
+## Possible Improvements
+
+- [ ] search by tag that include the search param avoiding capitalization. Include containinig parts of the tag.
