@@ -45,6 +45,7 @@ Basicall
 - [x] Components improvement - add multiple textOverley
   - Note: need to understand this better, why I use an onUpdate and pass it to the text-overlay component?
 - [x] Append and remove text Overlay = useState with numberOfOveralys set
+  - [x] Add a individual remove button for each overlay + re-index to avoid gaps.
 - [ ] Text Background
 - [ ] Debounce
 - [ ] Image Filters

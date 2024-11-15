@@ -6,6 +6,7 @@ import { useState } from "react";
 import { urlEndpoint } from "~/app/providers";
 import TextOverlay from "./text-overlay";
 import { Button } from "~/components/ui/button";
+import { X } from "lucide-react";
 
 export default function CustomizePanel({
     file,
@@ -17,23 +18,58 @@ export default function CustomizePanel({
     const [numberOfOverlays, setNumberOfOverlays] = useState(1);
     const transformationsArray = Object.values(transformations);
 
+    const removeOverlay = (indexToRemove: number) => {
+        setNumberOfOverlays(numberOfOverlays - 1);
+        setTransformations((current) => {
+            const newTransformations = { ...current };
+            // Remove the specific transformation
+            delete newTransformations[`text${indexToRemove}`];
+            // Reindex the transformations after the removed one
+            for (let i = indexToRemove + 1; i < numberOfOverlays; i++) {
+                if (newTransformations[`text${i}`]) {
+                    newTransformations[`text${i - 1}`] = newTransformations[`text${i}`];
+                    delete newTransformations[`text${i}`];
+                }
+            }
+            return newTransformations;
+        });
+    };
+
     return (
         <div className="grid grid-cols-2 gap-8">
             <div className="space-y-4">
                 {new Array(numberOfOverlays).fill("").map((_, index) => (
+                    <div key={index} className="relative">
+                        <TextOverlay
+                            key={index}
+                            index={index + 1}
+                            onUpdate={(text, x, y) => {
+                                setTransformations((current) => {
+                                    const newTransformations = { ...current };
 
-                    <TextOverlay
-                        key={index}
-                        index={index + 1}
-                        onUpdate={(text, x, y) => {
-                            setTransformations((current) => ({
-                                ...current,
-                                [`text${index}`]: {
-                                    raw: `l-text,i-${text ?? ""},fs-50,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
-                                },
-                            }))
-                        }}
-                    />
+                                    if (!text?.trim()) {
+                                        delete newTransformations[`text${index}`];
+                                        return newTransformations
+                                    }
+
+                                    return {
+                                        ...current,
+                                        [`text${index}`]: {
+                                            raw: `l-text,i-${text.trim()},fs-50,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
+                                        },
+                                    };
+                                });
+                            }}
+                        />
+                        <button
+                            onClick={() => removeOverlay(index)}
+                            className="absolute top-2 right-2 bg-black text-white rounded-full w-6 h-6 flex items-center justify-center"
+                            aria-label={`Remove overlay ${index + 1}`}
+                        >
+                            <X size={14} />
+                        </button>
+
+                    </div>
                 ))}
 
                 <div className="flex gap-4">
@@ -42,15 +78,7 @@ export default function CustomizePanel({
                     </Button>
                     <Button
                         variant={"destructive"}
-                        onClick={() => {
-                            setNumberOfOverlays(numberOfOverlays - 1);
-                            const lastIndex = numberOfOverlays - 1;
-                            setTransformations((current) => {
-                                const newCurrent = { ...current };
-                                delete newCurrent[`text${lastIndex}`];
-                                return newCurrent;
-                            });
-                        }}>
+                        onClick={() => { removeOverlay(numberOfOverlays - 1) }}>
                         Remove Last
                     </Button>
                 </div>
