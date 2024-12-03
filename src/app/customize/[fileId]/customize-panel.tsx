@@ -2,7 +2,7 @@
 
 import { FileObject } from "imagekit/dist/libs/interfaces";
 import { IKImage } from "imagekitio-next";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { urlEndpoint } from "~/app/providers";
 import TextOverlay from "./text-overlay";
 import { Button } from "~/components/ui/button";
@@ -16,24 +16,59 @@ export default function CustomizePanel({
 
     const [transformations, setTransformations] = useState<Record<string, { raw: string }>>({});
     const [numberOfOverlays, setNumberOfOverlays] = useState(1);
+
+    // Convert transformations object to array for IKImage
     const transformationsArray = Object.values(transformations);
 
-    const removeOverlay = (indexToRemove: number) => {
-        setNumberOfOverlays(numberOfOverlays - 1);
+    // Handler for updating overlay text and position
+    const onUpdate = useCallback((index: number, text: string, x: number, y: number, textFontSize: number, bgColor?: string) => {
         setTransformations((current) => {
             const newTransformations = { ...current };
-            // Remove the specific transformation
-            delete newTransformations[`text${indexToRemove}`];
-            // Reindex the transformations after the removed one
-            for (let i = indexToRemove + 1; i < numberOfOverlays; i++) {
-                if (newTransformations[`text${i}`]) {
-                    newTransformations[`text${i - 1}`] = newTransformations[`text${i}`];
-                    delete newTransformations[`text${i}`];
-                }
+
+            if (!text?.trim()) {
+                delete newTransformations[`text${index}`];
+                return newTransformations
             }
+
+            return {
+                ...current,
+                [`text${index}`]: {
+                    raw: `l-text,i-${text.trim()},fs-${textFontSize},${bgColor ? `bg-${bgColor},` : ""}pa-15,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
+                },
+            };
+        });
+    }, [])
+
+    // Handler for removing an overlay
+    const removeOverlay = useCallback((indexToRemove: number) => {
+        // Decrease the number of overlay cards
+        setNumberOfOverlays(prev => prev - 1);
+        
+        // Update transformations
+        setTransformations(current => {
+            const newTransformations: Record<string, { raw: string }> = {};
+            
+            // Filter out the removed overlay and reindex remaining ones
+            Object.entries(current).forEach(([key, value]) => {
+                const currentIndex = parseInt(key.replace('text', ''));
+                if (currentIndex !== indexToRemove + 1) { // Add 1 because TextOverlay component uses 1-based indexing
+                    const newIndex = currentIndex > indexToRemove + 1 ? currentIndex - 1 : currentIndex;
+                    newTransformations[`text${newIndex}`] = value;
+                }
+            });
+            
             return newTransformations;
         });
-    };
+    }, []);
+
+     // Handler for removing the last overlay
+     const removeLastOverlay = useCallback(() => {
+        setNumberOfOverlays(prev => {
+            const lastIndex = prev - 1;
+            removeOverlay(lastIndex);
+            return prev; // The actual decrement happens in removeOverlay
+        });
+    }, [removeOverlay]);
 
     return (
         <div className="grid grid-cols-2 gap-8">
@@ -43,23 +78,7 @@ export default function CustomizePanel({
                         <TextOverlay
                             key={index}
                             index={index + 1}
-                            onUpdate={(text, x, y) => {
-                                setTransformations((current) => {
-                                    const newTransformations = { ...current };
-
-                                    if (!text?.trim()) {
-                                        delete newTransformations[`text${index}`];
-                                        return newTransformations
-                                    }
-
-                                    return {
-                                        ...current,
-                                        [`text${index}`]: {
-                                            raw: `l-text,i-${text.trim()},fs-50,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
-                                        },
-                                    };
-                                });
-                            }}
+                            onUpdate={onUpdate}
                         />
                         <button
                             onClick={() => removeOverlay(index)}
@@ -73,12 +92,12 @@ export default function CustomizePanel({
                 ))}
 
                 <div className="flex gap-4">
-                    <Button onClick={() => { setNumberOfOverlays(numberOfOverlays + 1) }}>
+                    <Button onClick={() => { setNumberOfOverlays(prev => prev + 1) }}>
                         Add Another Text Overlay
                     </Button>
                     <Button
                         variant={"destructive"}
-                        onClick={() => { removeOverlay(numberOfOverlays - 1) }}>
+                        onClick={removeLastOverlay}>
                         Remove Last
                     </Button>
                 </div>

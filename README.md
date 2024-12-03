@@ -46,7 +46,8 @@ Basicall
   - Note: need to understand this better, why I use an onUpdate and pass it to the text-overlay component?
 - [x] Append and remove text Overlay = useState with numberOfOveralys set
   - [x] Add a individual remove button for each overlay + re-index to avoid gaps.
-- [ ] Text Background
+- [x] Text Background -> using [color-picker](https://casesandberg.github.io/react-color/)
+  - [x] Fix bugs: checkbox false doesnt remove the colorBackground + default text donsnt render on mount
 - [ ] Debounce
 - [ ] Image Filters
 - [ ] Download Button
