@@ -7,6 +7,7 @@ import { urlEndpoint } from "~/app/providers";
 import TextOverlay from "./text-overlay";
 import { Button } from "~/components/ui/button";
 import { X } from "lucide-react";
+import { debounce } from "lodash";
 
 export default function CustomizePanel({
     file,
@@ -21,33 +22,41 @@ export default function CustomizePanel({
     const transformationsArray = Object.values(transformations);
 
     // Handler for updating overlay text and position
-    const onUpdate = useCallback((index: number, text: string, x: number, y: number, textFontSize: number, bgColor?: string) => {
-        setTransformations((current) => {
-            const newTransformations = { ...current };
+    const onUpdate = useCallback(
+        debounce(
+            (index: number, text: string, x: number, y: number, textFontSize: number, bgColor?: string) => {
+                console.log("Updating overlay:", index, text, x, y, textFontSize, bgColor);
 
-            if (!text?.trim()) {
-                delete newTransformations[`text${index}`];
-                return newTransformations
-            }
+                setTransformations((current) => {
+                    const newTransformations = { ...current };
 
-            return {
-                ...current,
-                [`text${index}`]: {
-                    raw: `l-text,i-${text.trim()},fs-${textFontSize},${bgColor ? `bg-${bgColor},` : ""}pa-15,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
-                },
-            };
-        });
-    }, [])
+                    if (!text?.trim()) {
+                        delete newTransformations[`text${index}`];
+                        return newTransformations
+                    }
+
+                    return {
+                        ...current,
+                        [`text${index}`]: {
+                            raw: `l-text,i-${text.trim()},fs-${textFontSize},${bgColor ? `bg-${bgColor},` : ""}pa-15,ly-bh_mul_${y.toFixed(2)},lx-bw_mul_${x.toFixed(2)},l-end`,
+                        },
+                    };
+                });
+            },
+            250
+        ),
+        []
+    );
 
     // Handler for removing an overlay
     const removeOverlay = useCallback((indexToRemove: number) => {
         // Decrease the number of overlay cards
         setNumberOfOverlays(prev => prev - 1);
-        
+
         // Update transformations
         setTransformations(current => {
             const newTransformations: Record<string, { raw: string }> = {};
-            
+
             // Filter out the removed overlay and reindex remaining ones
             Object.entries(current).forEach(([key, value]) => {
                 const currentIndex = parseInt(key.replace('text', ''));
@@ -56,13 +65,13 @@ export default function CustomizePanel({
                     newTransformations[`text${newIndex}`] = value;
                 }
             });
-            
+
             return newTransformations;
         });
     }, []);
 
-     // Handler for removing the last overlay
-     const removeLastOverlay = useCallback(() => {
+    // Handler for removing the last overlay
+    const removeLastOverlay = useCallback(() => {
         setNumberOfOverlays(prev => {
             const lastIndex = prev - 1;
             removeOverlay(lastIndex);

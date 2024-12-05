@@ -48,7 +48,8 @@ Basicall
   - [x] Add a individual remove button for each overlay + re-index to avoid gaps.
 - [x] Text Background -> using [color-picker](https://casesandberg.github.io/react-color/)
   - [x] Fix bugs: checkbox false doesnt remove the colorBackground + default text donsnt render on mount
-- [ ] Debounce
+- [x] Debounce (avoid request on every onUpdate re-render)
+  - [x] Add lodash library `pnpm add lodash -D @types/lodash`
 - [ ] Image Filters
 - [ ] Download Button
 - [ ] Drizzle ORM
