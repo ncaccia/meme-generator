@@ -28,7 +28,6 @@ export default function TextOverlay({
     const yPositionDecimal = textOverleyYPosition / 100;
     const bgColor = applyColorPickerCheckbox ? textBgColor.replace("#", "") : undefined;
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     useEffect(() => {
         onUpdate(
             index,
@@ -39,13 +38,6 @@ export default function TextOverlay({
             bgColor
         );
     }, [index, textOverley, xPositionDecimal, yPositionDecimal, textFontSize, bgColor, onUpdate]);
-
-    const transformations = [];
-    if (textOverley) {
-        transformations.push({
-            raw: `l-text,i-${textOverley},fs-${textFontSize},ly-bh_mul_${yPositionDecimal.toFixed(2)},lx-bw_mul_${xPositionDecimal.toFixed(2)},l-end`
-        })
-    }
 
     return (
         <Card className="p-5 space-y-4">

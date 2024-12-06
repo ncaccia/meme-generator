@@ -50,7 +50,9 @@ Basicall
   - [x] Fix bugs: checkbox false doesnt remove the colorBackground + default text donsnt render on mount
 - [x] Debounce (avoid request on every onUpdate re-render)
   - [x] Add lodash library `pnpm add lodash -D @types/lodash`
-- [ ] Image Filters
+- [x] add Image Filters
+  - [c] refactor it to allow multiple filters through .map checkboxes.
+- [x] refactor leyout to keep image sticky on top while scrolling cards.
 - [ ] Download Button
 - [ ] Drizzle ORM
 - [ ] Authentication - Auth.js
@@ -65,3 +67,4 @@ Basicall
 ## Possible Improvements
 
 - [ ] search by tag that include the search param avoiding capitalization. Include containinig parts of the tag.
+- [ ] Change the aspect ratio and scale of the image.
