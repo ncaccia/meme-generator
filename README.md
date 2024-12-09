@@ -52,8 +52,18 @@ Basicall
   - [x] Add lodash library `pnpm add lodash -D @types/lodash`
 - [x] add Image Filters
   - [c] refactor it to allow multiple filters through .map checkboxes.
-- [x] refactor leyout to keep image sticky on top while scrolling cards.
-- [ ] Download Button
+- [x] refactor layout to keep image sticky on top while scrolling cards.
+- [x] Download Button
+  - Select the image element using querySelector
+  - Fetch the image data using the fetch API
+  - Convert the response into a format we can download === Blob object -> A Binary-Large-OBject (BLOB)  container or package that holds raw data. It can represent images, audio, or other multimedia. The `blob()` method is specifically designed to extract the binary data from a fetch response. When you want to download an image, you need:
+      - The address (URL) to find the image (you have this in imageData.src)
+      - A way to go get the image data (that's what fetch does)
+      - A way to package that data for download (that's what blob() does) -> use FileReader() or URL.createObjectURL() to read the contents
+      - Important: when you look at imageData.src, it might be showing what we call a "blob URL" or a temporary URL that only works for displaying the image in your browser, but not for downloading. This is why we use the fetch + blob approach instead.
+  - Create a download link
+  - Trigger the download
+  - clean up the code
 - [ ] Drizzle ORM
 - [ ] Authentication - Auth.js
 - [ ] Google Asuth Setup
