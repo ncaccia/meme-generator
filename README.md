@@ -64,9 +64,24 @@ Basicall
   - Create a download link
   - Trigger the download
   - clean up the code
-- [ ] Drizzle ORM
-- [ ] Authentication - Auth.js
-- [ ] Google Asuth Setup
+- [x] Drizzle ORM
+  - [x] setup db -> [Neon](https://orm.drizzle.team/docs/connect-neon) (NOTE: on next is is complex to setup a postgres)
+    - [x] create a folder for the src/app/db -> "db" -> file db.ts
+    - [x] setup drizzle-kit (2 migrate schemas) -> create a drizzle.config.ts -> set where shcema is located.
+    - [x] setup drizzle-kit to manage migrations
+- [x] Authentication - Auth.js -> `pnpm add next-auth@beta`
+  - [x] add mandatory env varAUTH_SECRET === random value used by the library to encrypt tokens and email verification hashes.
+  - [x] create an `src/auth.ts`
+  - [x] create the auth route `api/auth/[...nextauth]/route.ts`
+  - [x] create the middleware `auth` 
+  - [x] Connect to the db -> https://authjs.dev/getting-started/adapters/drizzle
+    - [ ] add the adapter:
+  - [x] `pnpm drizzle-kit push` to migrate the first schema -> check on neon/tables to see if worked correctly.
+  - [x] check/show on the header if the user is logged in.
+  - [x] [Google Auth provider ](https://authjs.dev/getting-started/providers/google)Setup
+    - note: for the authorized redirect URIs -> http://localhost:300/api/auth/callback/google
+- [ ] DB: create an user account
+- [ ] DB: create meme user colletion
 - [ ] Favorites Memes
 - [ ] Search Pages
 - [ ] Authorization Checks
@@ -78,3 +93,28 @@ Basicall
 
 - [ ] search by tag that include the search param avoiding capitalization. Include containinig parts of the tag.
 - [ ] Change the aspect ratio and scale of the image.
+
+## SPECIAL NOTES
+
+How drizzle + Neon + AuthJS work together. The flow works like this:
+
+### Authentication Flow:
+
+  1. User attempts to access protected route
+  2. `middleware.ts` checks authentication status -> `export { auth as middleware } from "~/auth";`
+  3. If not authenticated, redirects to auth route
+  4. `route.ts` handles authentication requests via handlers
+  5. Auth.js manages the OAuth flow with Google
+
+### Database Integration:
+
+  1. `db.ts`  establishes (only) connection to Neon -> handles **HOW** we connect to the database
+  2. `schema.ts` defines your database structure -> defines **WHAT** our database looks like
+  3. DrizzleAdapter connects Auth.js to your database ->  acts like a translator between Auth.js and your Neon database. 
+  4. User data is stored in the defined tables
+
+### Protection Layer:
+
+   1. middleware.ts protects your routes
+   2. Can be configured to protect specific paths
+   3. Integrates with Auth.js session management

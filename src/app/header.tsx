@@ -8,8 +8,11 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import ModeToggle from "~/components/ui/toggle-theme";
 import SearchInput from "./search/search-input";
+import { auth, signIn, signOut } from "~/auth";
 
-export default function Header() {
+export default async function Header() {
+    const session = await auth()
+
     return (
         <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
             {/* Desktop view */}
@@ -19,7 +22,7 @@ export default function Header() {
                     className="flex items-center gap-2 text-lg font-semibold md:text-base"
                 >
                     <Package2 className="h-6 w-6" />
-                    <span className="sr-only">Acme Inc</span>
+                    <span className="sr-only">Meme Generator</span>
                 </Link>
                 <Link
                     href="/"
@@ -79,25 +82,57 @@ export default function Header() {
                 <ModeToggle />
 
                 {/* Avatar dropdown menu component */}
-
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="secondary" size="icon" className="rounded-full">
-                            <CircleUser className="h-5 w-5" />
-                            <span className="sr-only">Toggle user menu</span>
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Settings</DropdownMenuItem>
-                        <DropdownMenuItem>Support</DropdownMenuItem>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
+                <AccountMenu />
 
             </div>
         </header>
     )
-} 
+}
+
+export async function AccountMenu() {
+
+    const session = await auth()
+    if (!session) {
+        return (
+            <form
+                action={async () => {
+                    "use server"
+                    await signIn()
+                }}
+            >
+                <Button type="submit" variant="outline">Sign In</Button>
+            </form>
+        )
+    }
+
+    return (
+        <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+                <Button variant="secondary" size="icon" className="rounded-full">
+                    <CircleUser className="h-5 w-5" />
+                    <span className="sr-only">Toggle user menu</span>
+                </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+                <DropdownMenuItem>
+                    <form
+                        action={async () => {
+                            "use server"
+                            await signOut()
+                        }}
+                    >
+                        <button type="submit">Sign Out</button>
+                    </form>
+                </DropdownMenuItem>
+
+                {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem>Logout</DropdownMenuItem> */}
+
+            </DropdownMenuContent>
+        </DropdownMenu>
+    )
+}
