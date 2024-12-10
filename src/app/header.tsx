@@ -1,14 +1,15 @@
 // src/components/header.tsx
 
-import { CircleUser, Menu, Package2, Search } from "lucide-react";
+import { Menu, Package2, Search } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { Button } from "~/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "~/components/ui/dropdown-menu";
 import { Sheet, SheetContent, SheetTrigger } from "~/components/ui/sheet";
 import ModeToggle from "~/components/ui/toggle-theme";
 import SearchInput from "./search/search-input";
 import { auth, signIn, signOut } from "~/auth";
+import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 
 export default async function Header() {
     const session = await auth()
@@ -92,6 +93,7 @@ export default async function Header() {
 export async function AccountMenu() {
 
     const session = await auth()
+
     if (!session) {
         return (
             <form
@@ -105,15 +107,43 @@ export async function AccountMenu() {
         )
     }
 
+    const sessionUser = session.user;
+    if (!sessionUser) return null
+    const cleanImageUrl = sessionUser.image?.replace(/['"]+/g, '');
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="secondary" size="icon" className="rounded-full">
-                    <CircleUser className="h-5 w-5" />
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                    <Avatar className="h-8 w-8">
+                        {cleanImageUrl && (
+                            // Use Next.js Image component inside AvatarImage
+                            <AvatarImage
+                                src={cleanImageUrl}
+                                alt={sessionUser.name || "User avatar"}
+                                loading="eager" // Add loading="eager" to prioritize loading
+                                sizes="32px" // Add sizes prop for optimization
+                            />
+                        )}
+                        {/* Always render the fallback - it will only show if image fails */}
+                        <AvatarFallback className="bg-muted">
+                            {sessionUser.name
+                                ? sessionUser.name.split(' ').map(n => n[0]).join('').toUpperCase()
+                                : 'U'
+                            }
+                        </AvatarFallback>
+                    </Avatar>
                     <span className="sr-only">Toggle user menu</span>
                 </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
+            <DropdownMenuContent align="end" className="w-48">
+
+                {/* Show user info at the top of the dropdown */}
+                <div className="px-2 py-1.5 text-sm">
+                    <div className="font-medium">{sessionUser.name}</div>
+                    <div className="text-xs text-muted-foreground">{sessionUser.email}</div>
+                </div>
+                <DropdownMenuSeparator />
                 <DropdownMenuItem>
                     <form
                         action={async () => {
@@ -124,14 +154,6 @@ export async function AccountMenu() {
                         <button type="submit">Sign Out</button>
                     </form>
                 </DropdownMenuItem>
-
-                {/* <DropdownMenuLabel>My Account</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
-                <DropdownMenuItem>Support</DropdownMenuItem>
-                <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem> */}
-
             </DropdownMenuContent>
         </DropdownMenu>
     )

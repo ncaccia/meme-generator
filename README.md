@@ -80,7 +80,8 @@ Basicall
   - [x] check/show on the header if the user is logged in.
   - [x] [Google Auth provider ](https://authjs.dev/getting-started/providers/google)Setup
     - note: for the authorized redirect URIs -> http://localhost:300/api/auth/callback/google
-- [ ] DB: create an user account
+- [x] DB: create an user account
+- [x] Add avatar w/google photo and google info to the user menu.
 - [ ] DB: create meme user colletion
 - [ ] Favorites Memes
 - [ ] Search Pages

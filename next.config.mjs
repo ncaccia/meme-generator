@@ -7,6 +7,11 @@ const nextConfig = {
                 hostname: "ik.imagekit.io",
                 port: "",
             },
+            {
+                protocol: "https",
+                hostname: "lh3.googleusercontent.com",
+                pathname: "/a/**",  // This pattern matches Google profile image paths
+            },
         ],
     },
 };
