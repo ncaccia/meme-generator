@@ -10,6 +10,11 @@ import ModeToggle from "~/components/ui/toggle-theme";
 import SearchInput from "./search/search-input";
 import { auth, signIn, signOut } from "~/auth";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Session } from "next-auth";
+
+interface AccountMenuProps {
+    session: Session | null;
+}
 
 export default async function Header() {
     const session = await auth()
@@ -63,7 +68,6 @@ export default async function Header() {
             <div className="flex w-full items-center gap-4 md:ml-auto md:gap-2 lg:gap-4">
 
                 {/* Search From component in the header */}
-
                 <form
                     action={async (formData) => {
                         "use server";
@@ -79,20 +83,18 @@ export default async function Header() {
                 </form>
 
                 {/* Add the dark/light mode toggle button */}
-
                 <ModeToggle />
 
                 {/* Avatar dropdown menu component */}
-                <AccountMenu />
+                <AccountMenu session={session} />
 
             </div>
         </header>
     )
 }
 
-export async function AccountMenu() {
-
-    const session = await auth()
+// export async function AccountMenu({ session }: AccountMenuProps) {
+export async function AccountMenu({ session }: AccountMenuProps) {
 
     if (!session) {
         return (
