@@ -6,11 +6,12 @@ import { useCallback, useState } from "react";
 import { urlEndpoint } from "~/app/providers";
 import TextOverlay from "./text-overlay";
 import { Button } from "~/components/ui/button";
-import { Download, X } from "lucide-react";
+import { Download, Heart, X } from "lucide-react";
 import { debounce } from "lodash";
 import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
+import { toggleFavouriteMemeAction } from "./actions";
 
 type Effect = {
     label: string;
@@ -37,8 +38,10 @@ type EffectName = keyof typeof imageEffects;
 
 export default function CustomizePanel({
     file,
+    isFavorited
 }: {
-    file: Pick<FileObject, "filePath" | "name">
+    file: Pick<FileObject, "filePath" | "name" | "fileId">;
+    isFavorited?: boolean;
 }) {
 
     const [textTransformations, setTextTransformations] = useState<Record<string, { raw: string }>>({});
@@ -143,45 +146,71 @@ export default function CustomizePanel({
 
     return (
         <>
-            {/* Title + Download button */}
-
+            {/* page Title */}
             <div className="flex items-center justify-between">
                 <h1 className="text-4xl font-bold">Customize</h1>
-                <TooltipProvider>
-                    <Tooltip>
-                        <TooltipTrigger asChild>
-                            <Button
-                                onClick={async () => {
 
-                                    // Select the img from the DOM
-                                    const imageData = document.querySelector('.meme-preview img') as HTMLImageElement;
+                {/* Download and like button + tooltip  */}
+                <div className="flex items-center gap-4">
 
-                                    // fetch the image data and create a downloadble blob 
-                                    const imageResponse = await fetch(imageData.src).then(
-                                        res => res.blob()
-                                    );
+                    {/* Like button */}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <form
+                                    action={toggleFavouriteMemeAction.bind(null, file.fileId)}
+                                >
+                                    <Button
+                                        type="submit"
+                                        variant={"outline"}
+                                    >
+                                        {isFavorited ? <Heart fill="black" /> : <Heart fill="white" />}
+                                    </Button>
+                                </form>
+                            </TooltipTrigger>
+                            <TooltipContent>
+                                <p>{isFavorited ? "Unlike this meme" : "Like this meme"}</p>
+                            </TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
 
-                                    // turn our Blob into temporary internal URL (something a link can use as its source)
-                                    const imageUrl = URL.createObjectURL(imageResponse);
+                    {/* Dwnload button */}
+                    <TooltipProvider>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <Button
+                                    onClick={async () => {
 
-                                    // create a temp download link
-                                    const downloadLink = document.createElement('a');
-                                    downloadLink.href = imageUrl;
-                                    downloadLink.download = file.name;
-                                    document.body.appendChild(downloadLink);
-                                    downloadLink.click();
+                                        // Select the img from the DOM
+                                        const imageData = document.querySelector('.meme-preview img') as HTMLImageElement;
 
-                                    // clean up
-                                    document.body.removeChild(downloadLink);
-                                    URL.revokeObjectURL(imageUrl);
-                                }}
-                            >
-                                <Download />
-                            </Button>
-                        </TooltipTrigger>
-                        <TooltipContent><p>Download Image</p></TooltipContent>
-                    </Tooltip>
-                </TooltipProvider>
+                                        // fetch the image data and create a downloadble blob 
+                                        const imageResponse = await fetch(imageData.src).then(
+                                            res => res.blob()
+                                        );
+
+                                        // turn our Blob into temporary internal URL (something a link can use as its source)
+                                        const imageUrl = URL.createObjectURL(imageResponse);
+
+                                        // create a temp download link
+                                        const downloadLink = document.createElement('a');
+                                        downloadLink.href = imageUrl;
+                                        downloadLink.download = file.name;
+                                        document.body.appendChild(downloadLink);
+                                        downloadLink.click();
+
+                                        // clean up
+                                        document.body.removeChild(downloadLink);
+                                        URL.revokeObjectURL(imageUrl);
+                                    }}
+                                >
+                                    <Download />
+                                </Button>
+                            </TooltipTrigger>
+                            <TooltipContent><p>Download Image</p></TooltipContent>
+                        </Tooltip>
+                    </TooltipProvider>
+                </div>
             </div>
 
             <div className="grid grid-cols-2 gap-8">

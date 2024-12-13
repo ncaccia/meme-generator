@@ -82,6 +82,14 @@ Basicall
     - note: for the authorized redirect URIs -> http://localhost:300/api/auth/callback/google
 - [x] DB: create an user account
 - [x] Add avatar w/google photo and google info to the user menu.
+- [x] track if user is liking which meme.
+  - [x] new table: `favorites`(who likes = `userId`, what it likes = `memeId`)
+  - [X] Add a form and heart button to the customize panel 
+  - [x] Add server action to the heart button send the like count to the db table "favorites" (add or delete favourite record) --> create a separete actions.ts file
+  - [x] Create a `loadear.ts` to pre-check if the user has liked the current meme to change the color of the heart icon.
+  - [X] Create an auth util to avoid repeating the session check en every component.
+  - [x] Add the isFavorite variable to the page and customize panel components.
+    - [x] add a turnery to the like button `{isFavorited ? <Heart fill="black" /> : <Heart fill="white" />}`
 - [ ] DB: create meme user colletion
 - [ ] Favorites Memes
 - [ ] Search Pages
@@ -119,3 +127,27 @@ How drizzle + Neon + AuthJS work together. The flow works like this:
    1. middleware.ts protects your routes
    2. Can be configured to protect specific paths
    3. Integrates with Auth.js session management
+
+### Nextjs server actions best practice
+  - Create a new file `actions.ts` in the same /route we are working
+  - They are executed by <forms> + `action={}` atribute, different to `onSubmit` (it tells nextjs to execute the action instead of the client side submition)
+    - the form will work even if the JS is dissable on the browser.
+    - it requires `revalidatePath('/any-route')`;  to Server-side cache reset the page.
+
+
+
+### Drizzle Notes
+
+- we need to add the schema to our db file in order to get type safety and improve dev experience.
+    ```js
+    import { neon } from "@neondatabase/serverless";
+    import { drizzle } from "drizzle-orm/neon-http";
+    import * as schema from "./schema";   <---- THIS
+
+    const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
+    const db = drizzle(sql, { schema });  <---- HERE
+
+    export { db };
+    ```
+
+- 
