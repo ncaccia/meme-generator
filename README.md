@@ -38,7 +38,7 @@ Basicall
 - [x] Refactor search by tag + add badge on tags from the meme card component.
 - [x] add /customize/[FileId]/ Page
   - [x] refactor imageKit utility out of the pages.
-- [x] create a CustomizePanel component --> Warning: Only plain objects can be passed to Client Components from Server Components. 
+- [x] create a CustomizePanel component --> Warning: Only plain objects can be passed to Client Components from Server Components.
   - Note: in next we mostrly use Server Components to fetch the data and Client Components to render it.
 - [x] add slider component --> https://imagekit.io/docs/transformations#position-of-layer
 - [x] Fix transformation to receive x/y position input
@@ -56,11 +56,11 @@ Basicall
 - [x] Download Button
   - Select the image element using querySelector
   - Fetch the image data using the fetch API
-  - Convert the response into a format we can download === Blob object -> A Binary-Large-OBject (BLOB)  container or package that holds raw data. It can represent images, audio, or other multimedia. The `blob()` method is specifically designed to extract the binary data from a fetch response. When you want to download an image, you need:
-      - The address (URL) to find the image (you have this in imageData.src)
-      - A way to go get the image data (that's what fetch does)
-      - A way to package that data for download (that's what blob() does) -> use FileReader() or URL.createObjectURL() to read the contents
-      - Important: when you look at imageData.src, it might be showing what we call a "blob URL" or a temporary URL that only works for displaying the image in your browser, but not for downloading. This is why we use the fetch + blob approach instead.
+  - Convert the response into a format we can download === Blob object -> A Binary-Large-OBject (BLOB) container or package that holds raw data. It can represent images, audio, or other multimedia. The `blob()` method is specifically designed to extract the binary data from a fetch response. When you want to download an image, you need:
+    - The address (URL) to find the image (you have this in imageData.src)
+    - A way to go get the image data (that's what fetch does)
+    - A way to package that data for download (that's what blob() does) -> use FileReader() or URL.createObjectURL() to read the contents
+    - Important: when you look at imageData.src, it might be showing what we call a "blob URL" or a temporary URL that only works for displaying the image in your browser, but not for downloading. This is why we use the fetch + blob approach instead.
   - Create a download link
   - Trigger the download
   - clean up the code
@@ -73,7 +73,7 @@ Basicall
   - [x] add mandatory env varAUTH_SECRET === random value used by the library to encrypt tokens and email verification hashes.
   - [x] create an `src/auth.ts`
   - [x] create the auth route `api/auth/[...nextauth]/route.ts`
-  - [x] create the middleware `auth` 
+  - [x] create the middleware `auth`
   - [x] Connect to the db -> https://authjs.dev/getting-started/adapters/drizzle
     - [ ] add the adapter:
   - [x] `pnpm drizzle-kit push` to migrate the first schema -> check on neon/tables to see if worked correctly.
@@ -84,19 +84,22 @@ Basicall
 - [x] Add avatar w/google photo and google info to the user menu.
 - [x] track if user is liking which meme.
   - [x] new table: `favorites`(who likes = `userId`, what it likes = `memeId`)
-  - [X] Add a form and heart button to the customize panel 
+  - [x] Add a form and heart button to the customize panel
   - [x] Add server action to the heart button send the like count to the db table "favorites" (add or delete favourite record) --> create a separete actions.ts file
   - [x] Create a `loadear.ts` to pre-check if the user has liked the current meme to change the color of the heart icon.
-  - [X] Create an auth util to avoid repeating the session check en every component.
+  - [x] Create an auth util to avoid repeating the session check en every component.
   - [x] Add the isFavorite variable to the page and customize panel components.
     - [x] add a turnery to the like button `{isFavorited ? <Heart fill="black" /> : <Heart fill="white" />}`
-- [ ] DB: create meme user colletion
-- [ ] Favorites Memes
+- [x] Favorites Memes page
+  - [x] new /route -> really similar to `search` page.
+  - [x] add a favorites list component
+  - [x] export favorite type on the schema file -> `export type Favorite = typeof favorites.$inferSelect`
+  - [x] add a "no data" placeholder when the favorite page has no data -> using https://undraw.co/
+  - [x] restrict header 'favorite' link to logged in users.
 - [ ] Search Pages
 - [ ] Authorization Checks
 - [ ] Favouriete Counts
 - [ ] Clean up
-
 
 ## Possible Improvements
 
@@ -109,45 +112,45 @@ How drizzle + Neon + AuthJS work together. The flow works like this:
 
 ### Authentication Flow:
 
-  1. User attempts to access protected route
-  2. `middleware.ts` checks authentication status -> `export { auth as middleware } from "~/auth";`
-  3. If not authenticated, redirects to auth route
-  4. `route.ts` handles authentication requests via handlers
-  5. Auth.js manages the OAuth flow with Google
+1. User attempts to access protected route
+2. `middleware.ts` checks authentication status -> `export { auth as middleware } from "~/auth";`
+3. If not authenticated, redirects to auth route
+4. `route.ts` handles authentication requests via handlers
+5. Auth.js manages the OAuth flow with Google
 
 ### Database Integration:
 
-  1. `db.ts`  establishes (only) connection to Neon -> handles **HOW** we connect to the database
-  2. `schema.ts` defines your database structure -> defines **WHAT** our database looks like
-  3. DrizzleAdapter connects Auth.js to your database ->  acts like a translator between Auth.js and your Neon database. 
-  4. User data is stored in the defined tables
+1. `db.ts` establishes (only) connection to Neon -> handles **HOW** we connect to the database
+2. `schema.ts` defines your database structure -> defines **WHAT** our database looks like
+3. DrizzleAdapter connects Auth.js to your database -> acts like a translator between Auth.js and your Neon database.
+4. User data is stored in the defined tables
 
 ### Protection Layer:
 
-   1. middleware.ts protects your routes
-   2. Can be configured to protect specific paths
-   3. Integrates with Auth.js session management
+1.  middleware.ts protects your routes
+2.  Can be configured to protect specific paths
+3.  Integrates with Auth.js session management
 
 ### Nextjs server actions best practice
-  - Create a new file `actions.ts` in the same /route we are working
-  - They are executed by <forms> + `action={}` atribute, different to `onSubmit` (it tells nextjs to execute the action instead of the client side submition)
-    - the form will work even if the JS is dissable on the browser.
-    - it requires `revalidatePath('/any-route')`;  to Server-side cache reset the page.
 
-
+- Create a new file `actions.ts` in the same /route we are working
+- They are executed by <forms> + `action={}` atribute, different to `onSubmit` (it tells nextjs to execute the action instead of the client side submition)
+  - the form will work even if the JS is dissable on the browser.
+  - it requires `revalidatePath('/any-route')`; to Server-side cache reset the page.
 
 ### Drizzle Notes
 
 - we need to add the schema to our db file in order to get type safety and improve dev experience.
-    ```js
-    import { neon } from "@neondatabase/serverless";
-    import { drizzle } from "drizzle-orm/neon-http";
-    import * as schema from "./schema";   <---- THIS
 
-    const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
-    const db = drizzle(sql, { schema });  <---- HERE
+  ```js
+  import { neon } from "@neondatabase/serverless";
+  import { drizzle } from "drizzle-orm/neon-http";
+  import * as schema from "./schema";   <---- THIS
 
-    export { db };
-    ```
+  const sql = neon(process.env.DRIZZLE_DATABASE_URL!);
+  const db = drizzle(sql, { schema });  <---- HERE
 
-- 
+  export { db };
+  ```
+
+-

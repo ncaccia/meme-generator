@@ -1,7 +1,7 @@
 import { db } from "~/app/db/db";
 import { favorites } from "~/app/db/schema";
 import { and, eq } from "drizzle-orm";
-import { assertAuthenticated } from "~/app/lib/auth-utils";
+import { assertAuthenticated } from "~/lib/auth-utils";
 
 export async function getFavoriteMeme(fileId: string) {
   const userId = await assertAuthenticated();

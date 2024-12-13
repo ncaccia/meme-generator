@@ -6,12 +6,12 @@ import { useCallback, useState } from "react";
 import { urlEndpoint } from "~/app/providers";
 import TextOverlay from "./text-overlay";
 import { Button } from "~/components/ui/button";
-import { Download, Heart, X } from "lucide-react";
+import { Download, X } from "lucide-react";
 import { debounce } from "lodash";
 import { Card } from "~/components/ui/card";
 import { Checkbox } from "~/components/ui/checkbox";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "~/components/ui/tooltip";
-import { toggleFavouriteMemeAction } from "./actions";
+import { FavoriteButton } from "./favorite-button";
 
 type Effect = {
     label: string;
@@ -40,7 +40,7 @@ export default function CustomizePanel({
     file,
     isFavorited
 }: {
-    file: Pick<FileObject, "filePath" | "name" | "fileId">;
+    file: Pick<FileObject, "filePath" | "name" | "fileId" | "tags">;
     isFavorited?: boolean;
 }) {
 
@@ -153,26 +153,16 @@ export default function CustomizePanel({
                 {/* Download and like button + tooltip  */}
                 <div className="flex items-center gap-4">
 
-                    {/* Like button */}
-                    <TooltipProvider>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <form
-                                    action={toggleFavouriteMemeAction.bind(null, file.fileId)}
-                                >
-                                    <Button
-                                        type="submit"
-                                        variant={"outline"}
-                                    >
-                                        {isFavorited ? <Heart fill="black" /> : <Heart fill="white" />}
-                                    </Button>
-                                </form>
-                            </TooltipTrigger>
-                            <TooltipContent>
-                                <p>{isFavorited ? "Unlike this meme" : "Like this meme"}</p>
-                            </TooltipContent>
-                        </Tooltip>
-                    </TooltipProvider>
+                    {/* Favorite button */}
+                    <FavoriteButton
+                        isFavorited={isFavorited}
+                        fileId={file.fileId}
+                        filePath={file.filePath}
+                        name={file.name}
+                        pathToRevalidate={`/customize/${file.fileId}`}
+                        tags={file.tags ?? undefined}
+                    />
+
 
                     {/* Dwnload button */}
                     <TooltipProvider>

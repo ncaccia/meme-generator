@@ -4,9 +4,15 @@ import { eq, and } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { db } from "~/app/db/db";
 import { favorites } from "~/app/db/schema";
-import { assertAuthenticated } from "~/app/lib/auth-utils";
+import { assertAuthenticated } from "~/lib/auth-utils";
 
-export async function toggleFavouriteMemeAction(fileId: string) {
+export async function toggleFavouriteMemeAction(
+  fileId: string,
+  filePath: string,
+  fileName: string,
+  pathToRevalidate: string,
+  tags?: string[]
+) {
   const userId = await assertAuthenticated();
 
   // Check if the user has already liked the meme
@@ -25,9 +31,12 @@ export async function toggleFavouriteMemeAction(fileId: string) {
     await db.insert(favorites).values({
       userId,
       memeId: fileId,
+      filePath: filePath,
+      name: fileName,
+      tags: tags ?? [],
     });
   }
 
   // Remove the cached version of the page and revalidate the page with the new data
-  revalidatePath(`/customize/${fileId}`);
+  revalidatePath(pathToRevalidate);
 }

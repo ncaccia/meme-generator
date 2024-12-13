@@ -1,7 +1,7 @@
 import { imagekit } from "~/lib/image-kit";
 import { unstable_noStore } from "next/cache";
 import CustomizePanel from "./customize-panel";
-import { getFavoriteMeme } from "./loader";
+import { getFavoriteMeme } from "./loaders";
 
 
 export default async function CustomizePage({
@@ -13,7 +13,6 @@ export default async function CustomizePage({
 
     const file = await imagekit.getFileDetails(params.fileId);
     const isFavorited = await getFavoriteMeme(params.fileId);
-    console.log("page load fileId: ", params.fileId);
 
     return (
 

@@ -9,6 +9,8 @@ import {
     CardContent,
     CardFooter,
 } from '~/components/ui/card';
+import { FavoriteButton } from '../customize/[fileId]/favorite-button';
+import { usePathname } from 'next/navigation';
 
 // Define the structure for meme file data
 interface MemeFile {
@@ -27,6 +29,8 @@ export default function MemeCard({
     file,
     children
 }: MemeCardProps) {
+    const currentPath = usePathname();
+
     return (
         <Card>
             <CardHeader>
@@ -44,10 +48,18 @@ export default function MemeCard({
             <CardContent>
                 {children}
             </CardContent>
-            <CardFooter>
+            <CardFooter className='flex gap-2'>
                 <Button asChild>
                     <Link href={`/customize/${file.fileId}`}>Customize</Link>
                 </Button>
+                <FavoriteButton
+                    isFavorited={true}
+                    fileId={file.fileId}
+                    filePath={file.filePath}
+                    name={file.name}
+                    pathToRevalidate={currentPath}
+                    tags={file.tags ?? undefined}
+                />
             </CardFooter>
         </Card>
     );

@@ -2,6 +2,8 @@ import { unstable_noStore } from "next/cache";
 import ResultList from "./result-list";
 import UploadMemeButton from "./upload-meme-button";
 import { imagekit } from "~/lib/image-kit";
+import { Card } from "~/components/ui/card";
+import Image from "next/image";
 
 export default async function SearchPage({
     searchParams,
@@ -22,7 +24,15 @@ export default async function SearchPage({
                 <h1 className="text-4xl font-bold">Search Results</h1>
                 <UploadMemeButton />
             </div>
-            <ResultList files={files} />
+
+            {files.length === 0
+                ?
+                <Card className="flex flex-col items-center justify-center space-y-4 p-10">
+                    <Image src="/no-data.svg" alt="no-data" width={200} height={200} />
+                    <p>Empty search! try another keyword</p>
+                </Card>
+                : <ResultList files={files} />
+            }
         </div>
 
 

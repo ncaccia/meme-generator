@@ -86,8 +86,16 @@ export const authenticators = pgTable(
 );
 
 export const favorites = pgTable("favorite", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
   userId: text("userId")
     .notNull()
     .references(() => users.id, { onDelete: "cascade" }),
   memeId: text("memeId").notNull(),
+  filePath: text("filePath").notNull(),
+  name: text("name").notNull(),
+  tags: text("tags").array().notNull(),
 });
+
+export type Favorite = typeof favorites.$inferSelect;
