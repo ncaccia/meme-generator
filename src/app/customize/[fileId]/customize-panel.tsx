@@ -38,10 +38,12 @@ type EffectName = keyof typeof imageEffects;
 
 export default function CustomizePanel({
     file,
-    isFavorited
+    isFavorited,
+    isAuthenticated,
 }: {
     file: Pick<FileObject, "filePath" | "name" | "fileId" | "tags">;
     isFavorited?: boolean;
+    isAuthenticated: boolean;
 }) {
 
     const [textTransformations, setTextTransformations] = useState<Record<string, { raw: string }>>({});
@@ -154,15 +156,16 @@ export default function CustomizePanel({
                 <div className="flex items-center gap-4">
 
                     {/* Favorite button */}
-                    <FavoriteButton
-                        isFavorited={isFavorited}
-                        fileId={file.fileId}
-                        filePath={file.filePath}
-                        name={file.name}
-                        pathToRevalidate={`/customize/${file.fileId}`}
-                        tags={file.tags ?? undefined}
-                    />
-
+                    {isAuthenticated && (
+                        <FavoriteButton
+                            isFavorited={isFavorited}
+                            fileId={file.fileId}
+                            filePath={file.filePath}
+                            name={file.name}
+                            pathToRevalidate={`/customize/${file.fileId}`}
+                            tags={file.tags ?? undefined}
+                        />
+                    )}
 
                     {/* Dwnload button */}
                     <TooltipProvider>
@@ -237,13 +240,15 @@ export default function CustomizePanel({
                                     index={index + 1}
                                     onUpdate={onUpdate}
                                 />
-                                <button
-                                    onClick={() => removeOverlay(index)}
-                                    className="absolute top-2 right-2 bg-black text-white rounded-full w-6 h-6 flex items-center justify-center"
-                                    aria-label={`Remove overlay ${index + 1}`}
-                                >
-                                    <X size={14} />
-                                </button>
+                                {numberOfOverlays > 1 && (
+                                    <button
+                                        onClick={() => removeOverlay(index)}
+                                        className="absolute top-2 right-2 bg-black text-white rounded-full w-6 h-6 flex items-center justify-center"
+                                        aria-label={`Remove overlay ${index + 1}`}
+                                    >
+                                        <X size={14} />
+                                    </button>
+                                )}
 
                             </div>
                         ))}
@@ -252,11 +257,13 @@ export default function CustomizePanel({
                             <Button onClick={() => { setNumberOfOverlays(prev => prev + 1) }}>
                                 Add Another Text Overlay
                             </Button>
-                            <Button
-                                variant={"destructive"}
-                                onClick={removeLastOverlay}>
-                                Remove Last
-                            </Button>
+                            {numberOfOverlays > 1 && (
+                                <Button
+                                    variant={"destructive"}
+                                    onClick={removeLastOverlay}>
+                                    Remove Last
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </div>

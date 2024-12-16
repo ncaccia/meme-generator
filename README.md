@@ -95,9 +95,13 @@ Basicall
   - [x] add a favorites list component
   - [x] export favorite type on the schema file -> `export type Favorite = typeof favorites.$inferSelect`
   - [x] add a "no data" placeholder when the favorite page has no data -> using https://undraw.co/
-  - [x] restrict header 'favorite' link to logged in users.
-- [ ] Search Pages
-- [ ] Authorization Checks
+- [x] Search Pages
+- [x] Authorization Checks
+  - [x] restrict header 'favorite' link to logged in users
+  - [x] Avoid customize page error, constrain the isFavorite atribute to session check first.
+  - [x] To avoid conflicts with users not logged-in, implement **"prop drilling"** - passing props through multiple components (as a boolean `!!session`) = hide favorites button if not logged-in on search page. **NOTE**: Alternative Approach: Using React Context
+    - [x] do the same for favorite page.
+    - [ ] Hide the favorite button on the customize page by using `isAuthenticated` prop.
 - [ ] Favouriete Counts
 - [ ] Clean up
 

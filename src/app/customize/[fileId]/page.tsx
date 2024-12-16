@@ -2,6 +2,7 @@ import { imagekit } from "~/lib/image-kit";
 import { unstable_noStore } from "next/cache";
 import CustomizePanel from "./customize-panel";
 import { getFavoriteMeme } from "./loaders";
+import { auth } from "~/auth";
 
 
 export default async function CustomizePage({
@@ -11,8 +12,11 @@ export default async function CustomizePage({
 }) {
     unstable_noStore(); // this tells nextjs to not cache this page.
 
+    const session = await auth();
+    const isFavorited = session ? await getFavoriteMeme(params.fileId) : false;
+
     const file = await imagekit.getFileDetails(params.fileId);
-    const isFavorited = await getFavoriteMeme(params.fileId);
+
 
     return (
 
@@ -25,6 +29,7 @@ export default async function CustomizePage({
                     fileId: file.fileId,
                 }}
                 isFavorited={isFavorited}
+                isAuthenticated={!!session}
             />
         </div>
 

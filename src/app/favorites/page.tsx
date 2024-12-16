@@ -1,3 +1,5 @@
+// src/app/favorites/page.tsx
+
 import { unstable_noStore } from "next/cache";
 import { getUserFavoriteMeme } from "./loaders";
 import FavoritesList from "./favorites-list";
@@ -5,11 +7,13 @@ import Image from "next/image";
 import { Button } from "~/components/ui/button";
 import Link from "next/link";
 import { Card } from "~/components/ui/card";
+import { auth } from "~/auth";
 
 export default async function FavoritePage() {
     unstable_noStore(); // this tells nextjs to not cache this page.
 
-    const favorites = await getUserFavoriteMeme();
+    const session = await auth();
+    const favorites = session ? await getUserFavoriteMeme() : [];
 
     return (
 
@@ -27,7 +31,7 @@ export default async function FavoritePage() {
                         <Link href="/search?q=">Search for one!</Link>
                     </Button>
                 </Card>
-                : < FavoritesList favorites={favorites} />
+                : < FavoritesList favorites={favorites} isAuthenticated={!!session} />
             }
 
         </div>

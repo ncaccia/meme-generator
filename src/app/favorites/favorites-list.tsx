@@ -6,7 +6,13 @@ import MemeCard from "../search/meme-card"
 import { type Favorite } from "../db/schema"
 
 
-export default function FavoritesList({ favorites }: { favorites: Favorite[] }) {
+export default function FavoritesList({
+    favorites,
+    isAuthenticated,
+}: {
+    favorites: Favorite[],
+    isAuthenticated: boolean,
+}) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {favorites.map((favorite) =>
@@ -18,6 +24,7 @@ export default function FavoritesList({ favorites }: { favorites: Favorite[] }) 
                         name: favorite.name,
                         tags: favorite.tags,
                     }}
+                    isAuthenticated={isAuthenticated}
                 >
                     <IKImage
                         key={favorite.memeId}

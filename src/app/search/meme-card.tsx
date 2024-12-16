@@ -23,11 +23,13 @@ interface MemeFile {
 interface MemeCardProps {
     file: MemeFile;
     children: React.ReactNode;
+    isAuthenticated: boolean;
 }
 
 export default function MemeCard({
     file,
-    children
+    children,
+    isAuthenticated
 }: MemeCardProps) {
     const currentPath = usePathname();
 
@@ -52,14 +54,16 @@ export default function MemeCard({
                 <Button asChild>
                     <Link href={`/customize/${file.fileId}`}>Customize</Link>
                 </Button>
-                <FavoriteButton
-                    isFavorited={true}
-                    fileId={file.fileId}
-                    filePath={file.filePath}
-                    name={file.name}
-                    pathToRevalidate={currentPath}
-                    tags={file.tags ?? undefined}
-                />
+                {isAuthenticated && (
+                    <FavoriteButton
+                        isFavorited={true}
+                        fileId={file.fileId}
+                        filePath={file.filePath}
+                        name={file.name}
+                        pathToRevalidate={currentPath}
+                        tags={file.tags ?? undefined}
+                    />
+                )}
             </CardFooter>
         </Card>
     );

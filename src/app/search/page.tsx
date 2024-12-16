@@ -4,6 +4,7 @@ import UploadMemeButton from "./upload-meme-button";
 import { imagekit } from "~/lib/image-kit";
 import { Card } from "~/components/ui/card";
 import Image from "next/image";
+import { auth } from "~/auth";
 
 export default async function SearchPage({
     searchParams,
@@ -15,6 +16,8 @@ export default async function SearchPage({
     const files = await imagekit.listFiles({
         tags: searchParams.q.toLowerCase()
     });
+
+    const session = await auth();
 
 
     return (
@@ -31,7 +34,7 @@ export default async function SearchPage({
                     <Image src="/no-data.svg" alt="no-data" width={200} height={200} />
                     <p>Empty search! try another keyword</p>
                 </Card>
-                : <ResultList files={files} />
+                : <ResultList files={files} isAuthenticated={!!session} />
             }
         </div>
 

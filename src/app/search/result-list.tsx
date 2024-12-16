@@ -6,7 +6,14 @@ import { urlEndpoint } from "../providers"
 import MemeCard from "./meme-card"
 
 
-export default function ResultList({ files }: { files: FileObject[] }) {
+export default function ResultList({
+    files,
+    isAuthenticated
+}: {
+    files: FileObject[],
+    isAuthenticated: boolean
+}
+) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             {files.map((file) =>
@@ -18,6 +25,7 @@ export default function ResultList({ files }: { files: FileObject[] }) {
                         name: file.customMetadata?.displayName as string ?? file.name,
                         tags: file.tags,
                     }}
+                    isAuthenticated={isAuthenticated}
                 >
                     <IKImage
                         key={file.fileId}

@@ -17,7 +17,7 @@ export default function TextOverlay({
     index: number;
     onUpdate: (index: number, text: string, x: number, y: number, fontSize: number, bgColor?: string) => void;
 }) {
-    const [textOverley, setTextOverley] = useState("Example Text");
+    const [textOverley, setTextOverley] = useState("");
     const [textOverleyXPosition, setTextOverleyXPosition] = useState(0);
     const [textOverleyYPosition, setTextOverleyYPosition] = useState(0);
     const [applyColorPickerCheckbox, setApplyColorPickerCheckbox] = useState(false);
