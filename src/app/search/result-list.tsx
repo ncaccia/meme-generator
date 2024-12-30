@@ -8,10 +8,12 @@ import MemeCard from "./meme-card"
 
 export default function ResultList({
     files,
-    isAuthenticated
+    isAuthenticated,
+    favoritesCount,
 }: {
     files: FileObject[],
     isAuthenticated: boolean
+    favoritesCount: { memeId: string, count: number }[]
 }
 ) {
     return (
@@ -25,6 +27,7 @@ export default function ResultList({
                         name: file.customMetadata?.displayName as string ?? file.name,
                         tags: file.tags,
                     }}
+                    favoritesCount={favoritesCount.find(f => f.memeId === file.fileId)?.count ?? 0}
                     isAuthenticated={isAuthenticated}
                 >
                     <IKImage

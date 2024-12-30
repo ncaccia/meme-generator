@@ -1,7 +1,7 @@
 // src/app/favorites/page.tsx
 
 import { unstable_noStore } from "next/cache";
-import { getUserFavoriteMeme } from "./loaders";
+import { getUserFavoriteMeme } from "./favorites-loaders";
 import FavoritesList from "./favorites-list";
 import Image from "next/image";
 import { Button } from "~/components/ui/button";

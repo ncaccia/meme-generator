@@ -5,6 +5,7 @@ import { imagekit } from "~/lib/image-kit";
 import { Card } from "~/components/ui/card";
 import Image from "next/image";
 import { auth } from "~/auth";
+import { getFavoritesCount } from "./search-loaders";
 
 export default async function SearchPage({
     searchParams,
@@ -19,6 +20,7 @@ export default async function SearchPage({
 
     const session = await auth();
 
+    const favoritesCount = await getFavoritesCount();
 
     return (
 
@@ -34,7 +36,7 @@ export default async function SearchPage({
                     <Image src="/no-data.svg" alt="no-data" width={200} height={200} />
                     <p>Empty search! try another keyword</p>
                 </Card>
-                : <ResultList files={files} isAuthenticated={!!session} />
+                : <ResultList files={files} isAuthenticated={!!session} favoritesCount={favoritesCount} />
             }
         </div>
 

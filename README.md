@@ -101,14 +101,19 @@ Basicall
   - [x] Avoid customize page error, constrain the isFavorite atribute to session check first.
   - [x] To avoid conflicts with users not logged-in, implement **"prop drilling"** - passing props through multiple components (as a boolean `!!session`) = hide favorites button if not logged-in on search page. **NOTE**: Alternative Approach: Using React Context
     - [x] do the same for favorite page.
-    - [ ] Hide the favorite button on the customize page by using `isAuthenticated` prop.
-- [ ] Favouriete Counts
-- [ ] Clean up
+    - [x] Hide the favorite button on the customize page by using `isAuthenticated` prop.
+- [x] Favouriete Counts -> count all the rows for an specific meme id
+  - [x] add a loader on the favorites page. Alternative: create a favvorite count table if we acumulate to much data and it gets expensive to load everytime.
+- [x] Clean up
+  - [x] change the title of the site -> layout
+  - [x] use redirect() next navigation function to push users from home to search pate
 
 ## Possible Improvements
 
+- [ ] add landing page to home (now is redirect to search) - Reearch SEO
 - [ ] search by tag that include the search param avoiding capitalization. Include containinig parts of the tag.
 - [ ] Change the aspect ratio and scale of the image.
+- [ ] Improve the file.metadata name into the card title on the meme card component.
 
 ## SPECIAL NOTES
 

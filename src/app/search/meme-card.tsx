@@ -11,12 +11,14 @@ import {
 } from '~/components/ui/card';
 import { FavoriteButton } from '../customize/[fileId]/favorite-button';
 import { usePathname } from 'next/navigation';
+import { Heart } from 'lucide-react';
 
 // Define the structure for meme file data
 interface MemeFile {
     fileId: string;
     filePath: string;
     name: string;
+    customMetadata?: { displayName: string };
     tags?: string[] | null;
 }
 
@@ -24,19 +26,29 @@ interface MemeCardProps {
     file: MemeFile;
     children: React.ReactNode;
     isAuthenticated: boolean;
+    favoritesCount?: number;
 }
 
 export default function MemeCard({
     file,
     children,
-    isAuthenticated
+    isAuthenticated,
+    favoritesCount,
 }: MemeCardProps) {
     const currentPath = usePathname();
 
     return (
         <Card>
             <CardHeader>
-                <CardTitle>{file.name}</CardTitle>
+                <CardTitle className='flex justify-between items-baseline'>
+                    {file.customMetadata?.displayName ?? file.name}
+                    {favoritesCount !== undefined &&
+                        <div className='flex items-center gap-1 py-2'>
+                            <Heart fill="black" size={14} />
+                            <div className='text-sm'>{favoritesCount}</div>
+                        </div>
+                    }
+                </CardTitle>
                 <div className="flex flex-wrap gap-2">
                     {file.tags && file.tags.length > 0 &&
                         file.tags.map((tag, index) => (
@@ -54,6 +66,7 @@ export default function MemeCard({
                 <Button asChild>
                     <Link href={`/customize/${file.fileId}`}>Customize</Link>
                 </Button>
+
                 {isAuthenticated && (
                     <FavoriteButton
                         isFavorited={true}
